@@ -46,4 +46,41 @@
  */
 export function railwayReservation(passengers, trains) {
   // Your code here
+  if (!Array.isArray(passengers) || !Array.isArray(trains)) return [];
+  if (passengers.length === 0 || trains.length === 0) return [];
+
+  const results = [];
+
+  for (let i = 0; i < passengers.length; i++) {
+    const p = passengers[i];
+
+    let foundTrain = null;
+    for (let j = 0; j < trains.length; j++) {
+      if (trains[j].trainNumber === p.trainNumber) {
+        foundTrain = trains[j]; // reference milti hai, isliye mutation works!
+        break;
+      }
+    }
+
+    if (!foundTrain) {
+      results.push({ name: p.name, trainNumber: p.trainNumber, class: null, status: "train_not_found" });
+      continue; // next passenger
+    }
+
+    const seats = foundTrain.seats;
+
+    if (seats[p.preferred] > 0) {
+      seats[p.preferred]--;  // seat ghata do (mutation!)
+      results.push({ name: p.name, trainNumber: p.trainNumber, class: p.preferred, status: "confirmed" });
+    }
+    else if (seats[p.fallback] > 0) {
+      seats[p.fallback]--;   // seat ghata do (mutation!)
+      results.push({ name: p.name, trainNumber: p.trainNumber, class: p.fallback, status: "confirmed" });
+    }
+    else {
+      results.push({ name: p.name, trainNumber: p.trainNumber, class: p.preferred, status: "waitlisted" });
+    }
+  }
+
+  return results;
 }

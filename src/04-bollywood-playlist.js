@@ -5,7 +5,7 @@
  * Usne ek playlist banayi hai with song durations (in seconds). Lekin
  * trip sirf itni der ki hai - usse zyada songs mat daalo playlist mein.
  *
- * Rules (use while loop):
+ * Rules (use while loop):s
  *   - Songs array mein se ek ek song add karo
  *   - BEFORE adding a song, check: kya current total + is song ki duration
  *     maxDuration se zyada ho jayegi? Agar haan, toh STOP. Mat add karo.
@@ -35,4 +35,38 @@
  */
 export function buildPlaylist(songs, maxDuration) {
   // Your code here
+  if (
+    !Array.isArray(songs) ||
+    typeof maxDuration !== "number" ||
+    maxDuration <= 0
+  ) {
+    return { count: 0, totalDuration: 0 };
+  }
+
+  let index = 0;
+  let totalDuration = 0;
+  let count = 0;
+
+  while (index < songs.length) {
+    let duration = songs[index];
+
+    if (
+      typeof duration !== "number" ||
+      duration <= 0 ||
+      Number.isNaN(duration)
+    ) {
+      index++;
+      continue;
+    }
+
+    if (totalDuration + duration > maxDuration) {
+      break;
+    }
+
+    totalDuration += duration;
+    count++;
+    index++;
+  }
+
+  return { count, totalDuration };
 }
